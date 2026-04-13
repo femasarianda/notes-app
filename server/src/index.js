@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const { testConnection } = require('./config/database');
+const { syncDatabase } = require('./models/index');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -43,6 +44,7 @@ app.use((err, req, res, next) => {
 
 const start = async () => {
   await testConnection();
+  await syncDatabase();
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
   });
