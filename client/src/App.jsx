@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import NotesPage from './pages/NotesPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -11,7 +12,6 @@ const queryClient = new QueryClient({
   },
 })
 
-// Halaman yang hanya bisa diakses kalau sudah login
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return (
@@ -22,7 +22,6 @@ const ProtectedRoute = ({ children }) => {
   return user ? children : <Navigate to="/login" replace />;
 };
 
-// Halaman yang redirect ke / kalau sudah login
 const GuestRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return null;
@@ -39,11 +38,7 @@ function AppRoutes() {
           path="/"
           element={
             <ProtectedRoute>
-              <div className="min-h-screen flex items-center justify-center">
-                <p className="text-foreground text-xl font-medium">
-                  Notes — Phase 3 ✅ (Dashboard coming in Phase 4)
-                </p>
-              </div>
+              <NotesPage />
             </ProtectedRoute>
           }
         />
