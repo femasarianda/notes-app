@@ -7,6 +7,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import { useMutation } from '@tanstack/react-query';
 import { updateNote } from '../api/notes';
 import { Bold, Italic, UnderlineIcon, List, ListOrdered, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
+import TagSelcector from './TagSelector';
 
 export default function NoteEditor({ note, onUpdate }) {
   const [title, setTitle] = useState(note.title || '');
@@ -148,6 +149,11 @@ export default function NoteEditor({ note, onUpdate }) {
           placeholder="Untitled"
           className="w-full text-3xl font-bold text-foreground bg-transparent border-none outline-none placeholder:text-muted-foreground/40"
         />
+      </div>
+
+      {/* Tags */}
+      <div className="px-8 pb-3">
+        <TagSelector note={note} onUpdate={onUpdate} />
       </div>
 
       {/* Editor */}

@@ -5,6 +5,7 @@ import { Pin, Trash2, Plus, Search, RotateCcw, Trash } from 'lucide-react';
 import { getNotes, createNote, deleteNote, pinNote, restoreNote, permanentDelete } from '../api/notes';
 import { useAuth } from '../context/AuthContext';
 import NoteEditor from '../components/NoteEditor';
+import TagManager from '../components/TagManager';
 
 export default function NotesPage() {
   const { logout, user } = useAuth();
@@ -13,10 +14,11 @@ export default function NotesPage() {
   const [showTrash, setShowTrash] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [selectedTagId, setSelectedTagId] = useState(null);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['notes', search, showTrash],
-    queryFn: () => getNotes({ search, trash: showTrash }),
+    queryKey: ['notes', search, showTrash, selectedTagId],
+    queryFn: () => getNotes({ search, trash: showTrash, tag: selectedTagId }),
   });
 
   const notes = data?.data?.notes || [];
@@ -103,6 +105,16 @@ export default function NotesPage() {
               <Plus size={16} />
               New Note
             </button>
+          </div>
+        )}
+
+        {/* Tag Manager */}
+        {!showTrash && (
+          <div className="border-b border-border pb-2 pt-1">
+            <TagManager
+              onSelectTag={setSelectedTagId}
+              selectedTagId={selectedTagId}
+            />
           </div>
         )}
 
