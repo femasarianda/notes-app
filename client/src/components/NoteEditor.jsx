@@ -2,12 +2,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { useMutation } from '@tanstack/react-query';
 import { updateNote } from '../api/notes';
 import { Bold, Italic, UnderlineIcon, List, ListOrdered, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
-import TagSelcector from './TagSelector';
+import TagSelector from './TagSelector';
 
 export default function NoteEditor({ note, onUpdate }) {
   const [title, setTitle] = useState(note.title || '');
@@ -24,7 +23,6 @@ export default function NoteEditor({ note, onUpdate }) {
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Underline,
       Placeholder.configure({ placeholder: 'Start writing...' }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
     ],
