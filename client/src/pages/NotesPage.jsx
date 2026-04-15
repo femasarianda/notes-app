@@ -141,11 +141,10 @@ export default function NotesPage() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
                   onClick={() => setSelectedNote(note)}
-                  className={`group relative p-3 rounded-md cursor-pointer transition ${
-                    selectedNote?.id === note.id
+                  className={`group relative p-3 rounded-md cursor-pointer transition ${selectedNote?.id === note.id
                       ? 'bg-accent'
                       : 'hover:bg-accent/50'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
@@ -213,18 +212,33 @@ export default function NotesPage() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
-        {selectedNote ? (
-          <NoteEditor
-            key={selectedNote.id}
-            note={selectedNote}
-            onUpdate={() => queryClient.invalidateQueries(['notes'])}
-          />
-        ) : (
-          <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
-            <p className="text-4xl mb-4">📝</p>
-            <p className="text-sm">Select a note or create a new one</p>
-          </div>
-        )}
+        <AnimatePresence mode="wait">
+          {selectedNote ? (
+            <motion.div
+              key={selectedNote.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="h-full"
+            >
+              <NoteEditor
+                note={selectedNote}
+                onUpdate={() => queryClient.invalidateQueries(['notes'])}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="h-full flex flex-col items-center justify-center text-muted-foreground"
+            >
+              <p className="text-4xl mb-4">📝</p>
+              <p className="text-sm">Select a note or create a new one</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
