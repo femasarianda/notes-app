@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import NoteEditor from '../components/NoteEditor';
 import TagManager from '../components/TagManager';
 import DarkModeToggle from '../components/DarkModeToggle';
+import NoteCardSkeleton from '../components/NoteCardSkeleton';
 
 export default function NotesPage() {
   const { logout, user } = useAuth();
@@ -17,7 +18,7 @@ export default function NotesPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [selectedTagId, setSelectedTagId] = useState(null);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['notes', search, showTrash, selectedTagId],
     queryFn: () => getNotes({ search, trash: showTrash, tag: selectedTagId }),
   });
@@ -123,10 +124,14 @@ export default function NotesPage() {
         {/* Notes List */}
         <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {isLoading ? (
-            <div className="space-y-2 p-2">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-14 rounded-md bg-muted animate-pulse" />
+            <div className="space-y-1 p-2">
+              {[...Array(6)].map((_, i) => (
+                <NoteCardSkeleton key={i} />
               ))}
+            </div>
+          ) : isError ? (
+            <div className="text-center text-destructive text-sm py-12 px-4">
+              Failed to load notes. Check your connection.
             </div>
           ) : notes.length === 0 ? (
             <div className="text-center text-muted-foreground text-sm py-12">
@@ -142,8 +147,8 @@ export default function NotesPage() {
                   exit={{ opacity: 0, x: -10 }}
                   onClick={() => setSelectedNote(note)}
                   className={`group relative p-3 rounded-md cursor-pointer transition ${selectedNote?.id === note.id
-                      ? 'bg-accent'
-                      : 'hover:bg-accent/50'
+                    ? 'bg-accent'
+                    : 'hover:bg-accent/50'
                     }`}
                 >
                   <div className="flex items-start justify-between gap-2">
