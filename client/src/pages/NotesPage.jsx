@@ -6,6 +6,7 @@ import { getNotes, createNote, deleteNote, pinNote, restoreNote, permanentDelete
 import { useAuth } from '../context/AuthContext';
 import NoteEditor from '../components/NoteEditor';
 import TagManager from '../components/TagManager';
+import DarkModeToggle from '../components/DarkModeToggle';
 
 export default function NotesPage() {
   const { logout, user } = useAuth();
@@ -65,6 +66,7 @@ export default function NotesPage() {
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-lg font-semibold text-foreground">📝 Notes</h1>
             <div className="flex gap-2">
+              <DarkModeToggle />
               <button
                 onClick={() => { setShowTrash(!showTrash); setSelectedNote(null); }}
                 className={`p-1.5 rounded-md transition ${showTrash ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:bg-accent'}`}
