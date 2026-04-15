@@ -8,14 +8,16 @@ export default function TagSelector({ note, onUpdate }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
+  // Simpan tags di local state supaya langsung update tanpa nunggu refetch
+  const [localTags, setLocalTags] = useState(note.Tags || []);
+
   const { data } = useQuery({
     queryKey: ['tags'],
     queryFn: getTags,
   });
 
   const allTags = data?.data?.tags || [];
-  const noteTags = note.Tags || [];
-  const noteTagIds = noteTags.map(t => t.id);
+  const localTagIds = localTags.map(t => t.id);
 
   const mutation = useMutation({
     mutationFn: (tagIds) => updateNote(note.id, { tagIds }),
@@ -26,9 +28,21 @@ export default function TagSelector({ note, onUpdate }) {
   });
 
   const toggleTag = (tagId) => {
-    const newTagIds = noteTagIds.includes(tagId)
-      ? noteTagIds.filter(id => id !== tagId)
-      : [...noteTagIds, tagId];
+    const isAdding = !localTagIds.includes(tagId);
+
+    // Update local state dulu biar langsung keliatan
+    if (isAdding) {
+      const tagToAdd = allTags.find(t => t.id === tagId);
+      if (tagToAdd) setLocalTags(prev => [...prev, tagToAdd]);
+    } else {
+      setLocalTags(prev => prev.filter(t => t.id !== tagId));
+    }
+
+    // Lalu kirim ke server
+    const newTagIds = isAdding
+      ? [...localTagIds, tagId]
+      : localTagIds.filter(id => id !== tagId);
+
     mutation.mutate(newTagIds);
   };
 
@@ -36,7 +50,7 @@ export default function TagSelector({ note, onUpdate }) {
     <div className="relative">
       {/* Current Tags + Toggle Button */}
       <div className="flex items-center gap-1 flex-wrap">
-        {noteTags.map(tag => (
+        {localTags.map(tag => (
           <span
             key={tag.id}
             className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs text-white"
@@ -77,7 +91,7 @@ export default function TagSelector({ note, onUpdate }) {
                   style={{ backgroundColor: tag.color }}
                 />
                 <span className="text-xs text-foreground flex-1">{tag.name}</span>
-                {noteTagIds.includes(tag.id) && (
+                {localTagIds.includes(tag.id) && (
                   <span className="text-xs text-primary">✓</span>
                 )}
               </button>
