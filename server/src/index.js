@@ -41,21 +41,32 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Inisialisasi DB
-const init = async () => {
-  await testConnection();
-  await syncDatabase();
+// Inisialisasi DB hanya sekali
+let isInitialized = false;
+
+const initialize = async () => {
+  if (!isInitialized) {
+    await testConnection();
+    await syncDatabase();
+    isInitialized = true;
+  }
 };
 
-init();
+// Wrap app untuk Vercel serverless
+const handler = async (req, res) => {
+  await initialize();
+  return app(req, res);
+};
 
 // Export untuk Vercel serverless
-module.exports = app;
+module.exports = handler;
 
 // Listen untuk lokal development
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  initialize().then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
   });
 }
