@@ -27,23 +27,25 @@ Full-stack notes application built as a take-home project.
 - 🌙 Dark mode
 
 ## Project Structure
+
+```text
 notes-app/
-├── client/               # React frontend (Vite)
+├── client/                # React frontend (Vite)
 │   ├── src/
-│   │   ├── api/          # Axios API calls
-│   │   ├── components/   # Reusable components
-│   │   ├── context/      # Auth context
-│   │   ├── hooks/        # Custom hooks
-│   │   ├── pages/        # Page components
+│   │   ├── api/           # Axios API calls
+│   │   ├── components/    # Reusable components
+│   │   ├── context/       # Auth context
+│   │   ├── hooks/         # Custom hooks
+│   │   ├── pages/         # Page components
 │   │   └── App.jsx
 │   └── package.json
-├── server/               # Express backend
+├── server/                # Express backend
 │   ├── src/
-│   │   ├── config/       # Database config
-│   │   ├── controllers/  # Route handlers
-│   │   ├── middleware/   # JWT middleware
-│   │   ├── models/       # Sequelize models
-│   │   └── routes/       # API routes
+│   │   ├── config/        # Database config
+│   │   ├── controllers/   # Route handlers
+│   │   ├── middleware/    # JWT middleware
+│   │   ├── models/        # Sequelize models
+│   │   └── routes/        # API routes
 │   └── package.json
 └── README.md
 
